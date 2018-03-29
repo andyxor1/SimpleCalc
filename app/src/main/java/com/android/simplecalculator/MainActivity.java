@@ -6,20 +6,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.Stack;
-import java.util.Arrays;
 
 /**
  * Created by Andy Or on 3/25/2018.
  */
 public class MainActivity extends AppCompatActivity{
 
-    private static String operators = new String("=()+-*/^!");
-    private Stack<String> stack1 = new Stack<String>(); // input and numbers
-    private Stack<String> stack2 = new Stack<String>(); // postfix and operators
+    private static String operators = "=()+-*/^!";
+    private Stack<String> numStack = new Stack<>(); // input and numbers
+    private Stack<String> opStack = new Stack<>(); // postfix and operators
+    private Hashtable<String, Integer> orderOfOps =  new Hashtable<>();
 
     // Buttons on Calculator
-    final EditText userInput = (EditText) findViewById(R.id.output);
+    EditText userInput = (EditText) findViewById(R.id.output);
     final Button add = (Button) findViewById(R.id.add);
     final Button subtract = (Button) findViewById(R.id.subtract);
     final Button multiply = (Button) findViewById(R.id.multiply);
@@ -40,35 +43,46 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        userInput.setText(" ");
+
+
+        // PEMDAS
+        orderOfOps.put("+", 1);
+        orderOfOps.put("-", 1);
+        orderOfOps.put("*", 2);
+        orderOfOps.put("/", 2);
+        orderOfOps.put("^", 3);
+        orderOfOps.put("!", 3);
 
         // Basic Operations
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stack1.push("+");
+                appendExp(" + ");
             }
         });
         subtract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stack1.push("-");
+                appendExp(" - ");
             }
         });
         multiply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stack1.push("*");
+                appendExp(" * ");
             }
         });
         divide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stack1.push("/");
+                appendExp(" / ");
             }
         });
         equal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                toPostFix();    // change infix expression to postfix
                 evaluate();     // evaluate all of stack
 
             }
@@ -79,61 +93,61 @@ public class MainActivity extends AppCompatActivity{
         num0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                appendNum('0');
+                appendExp("0");
             }
         });
         num1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                appendNum('1');
+                appendExp("1");
             }
         });
         num2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                appendNum('2');
+                appendExp("2");
             }
         });
         num3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                appendNum('3');
+                appendExp("3");
             }
         });
         num4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                appendNum('4');
+                appendExp("4");
             }
         });
         num5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                appendNum('5');
+                appendExp("5");
             }
         });
         num6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                appendNum('6');
+                appendExp("6");
             }
         });
         num7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                appendNum('7');
+                appendExp("7");
             }
         });
         num8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                appendNum('8');
+                appendExp("8");
             }
         });
         num9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                appendNum('9');
+                appendExp("9");
             }
         });
 
@@ -144,44 +158,44 @@ public class MainActivity extends AppCompatActivity{
      * Return: True if e is operator, otherwise False
      */
     public boolean isOperator(String e) {
-        return (operators.indexOf(e) >= 0)? true : false;
+        return operators.contains(e);
     }
 
     /*
-     * Description: Evaluate a post-fix expression stored in stack1
+     * Description: Evaluate a post-fix expression stored in numStack
      * Return: computed value
      */
     public long evaluate() {
         String operator;
         String operand1, operand2;
         long result;
-        // reverse stack1 onto stack2
-        while (!stack1.isEmpty())
-            stack2.push(stack1.pop());
+        // reverse numStack onto opStack
+        while (!numStack.isEmpty())
+            opStack.push(numStack.pop());
 
-        while (!stack2.isEmpty()) {
+        while (!opStack.isEmpty()) {
 
-            if (!isOperator(stack2.peek())) { // push numbers to stack1
-                stack1.push(stack2.pop());
+            if (!isOperator(opStack.peek())) { // push numbers to numStack
+                numStack.push(opStack.pop());
 
             } else {   // top element is an operand
-                operator = stack2.pop();
-                operand1 = stack1.pop();
+                operator = opStack.pop();
+                operand1 = numStack.pop();
 
                 // Unary Operator
-                if (operator == "!") {
+                if (operator.equals("!")) {
                     // factorial
-                    stack1.push(Long.toString(Long.parseLong(operand1)));
+                    numStack.push(Long.toString(Long.parseLong(operand1)));
 
                     // Binary Operator
                 } else {
-                    operand2 = stack1.pop();
-                    stack1.push(Long.toString(binaryOP(operator, operand1, operand2)));
+                    operand2 = numStack.pop();
+                    numStack.push(Long.toString(binaryOP(operator, operand1, operand2)));
                 }
             }
         }
 
-        result = Long.parseLong(stack1.peek());
+        result = Long.parseLong(numStack.peek());
         return result;
     }
 
@@ -224,9 +238,45 @@ public class MainActivity extends AppCompatActivity{
     }
 
     /*
-     * Description: Appends character c to current user input
+     * Description: Appends String c to current user input
+     * Source of Help:
+     *  http://interactivepython.org/runestone/static/pythonds/BasicDS/InfixPrefixandPostfixExpressions.html
      */
-    public void appendNum(char c) {
-             userInput.setText(userInput.getText().append(c));
+    public void appendExp(String c) {
+        String added = userInput.getText() + c;
+        userInput.setText(added);
+    }
+
+    /*
+     * Description: Convert infix expression from user to postfix, stored in numStack.
+     * Source of Help:
+     *  http://interactivepython.org/runestone/static/pythonds/BasicDS/InfixPrefixandPostfixExpressions.html
+     */
+    public void toPostFix() {
+        String[] expression = userInput.getText().toString().split(" ");
+        for (String input: expression ) {
+
+            if( input.equals("(")) {
+                opStack.push(input);
+
+            } else if ( input.equals(")")) {
+                while (!opStack.peek().equals("("))
+                    numStack.push(opStack.pop());
+
+            } else if( isOperator(input) ) {
+                // remove any  precedence operators on opstack
+                while (!opStack.isEmpty() &&
+                        orderOfOps.get(input) < orderOfOps.get(opStack.peek())) {
+                    numStack.push(opStack.pop());
+                }
+                opStack.push(input);
+
+            } else { // operand
+                numStack.push(input);
+            }
+        }
+        // any remain operators
+        while (!opStack.isEmpty())
+            numStack.push(opStack.pop());
     }
 }
