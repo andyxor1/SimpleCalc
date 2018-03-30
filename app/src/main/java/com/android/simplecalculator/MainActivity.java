@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity{
 
     private Stack<String> numStack = new Stack<>(); // input and numbers
     private Stack<String> opStack = new Stack<>(); // postfix and operator
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getSimpleName(); // LOGS
     final Calculator calc = new Calculator();
     private long result;
 
@@ -29,13 +29,18 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         // Buttons on Calculator
         final EditText userInput = findViewById(R.id.output);
         final Button add = findViewById(R.id.add);
         final Button subtract = findViewById(R.id.subtract);
         final Button multiply = findViewById(R.id.multiply);
         final Button divide = findViewById(R.id.divide);
+        final Button exponent = findViewById(R.id.exponent);
+        final Button factorial = findViewById(R.id.factorial);
+
         final Button equal = findViewById(R.id.equal);
+        final Button decimal = findViewById(R.id.decimal);
         final Button leftParan = findViewById(R.id.leftParantheses);
         final  Button rightParan = findViewById(R.id.rightParantheses);
 
@@ -51,10 +56,6 @@ public class MainActivity extends AppCompatActivity{
         final Button num9 = findViewById(R.id.num9);
         final Button del = findViewById(R.id.delete);
         final Button clr = findViewById(R.id.clear);
-
-
-
-
 
         // Basic Operations
         add.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +82,18 @@ public class MainActivity extends AppCompatActivity{
                 userInput.setText(append(userInput.getText().toString()," / "));
             }
         });
+        exponent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userInput.setText(append(userInput.getText().toString(), " ^ "));
+            }
+        });
+        factorial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userInput.setText(append(userInput.getText().toString(), " ! "));
+            }
+        });
         equal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,6 +103,12 @@ public class MainActivity extends AppCompatActivity{
                 result = calc.evaluate(numStack, opStack);     // evaluate all of stack
                 userInput.setText(String.format(Locale.US, "%d",    result));
                 Log.d(TAG, "result = " + result);
+            }
+        });
+        decimal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userInput.setText(append(userInput.getText().toString(), "."));
             }
         });
         leftParan.setOnClickListener(new View.OnClickListener() {
@@ -184,7 +203,6 @@ public class MainActivity extends AppCompatActivity{
                 userInput.setText("");
             }
         });
-
     }
 
 

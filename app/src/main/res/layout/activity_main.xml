@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,160 +13,175 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="Output" />
+        android:hint="@string/output" />
 
     <Button
         android:id="@+id/num0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0"
+        android:text="@string/num0"
         android:layout_below="@id/num2"
-        android:layout_toRightOf="@id/decimal" />
+        android:layout_toEndOf="@id/decimal" />
 
     <Button
         android:id="@+id/num1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1"
+        android:text="@string/num1"
         android:layout_below="@id/num4"/>
 
     <Button
         android:id="@+id/num2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="2"
+        android:text="@string/num2"
         android:layout_below="@id/num5"
-        android:layout_toRightOf="@id/num1" />
+        android:layout_toEndOf="@id/num1" />
 
     <Button
         android:id="@+id/num3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="3"
+        android:text="@string/num3"
         android:layout_below="@id/num6"
-        android:layout_toRightOf="@id/num2" />
+        android:layout_toEndOf="@id/num2" />
 
     <Button
         android:id="@+id/num4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="4"
+        android:text="@string/num4"
         android:layout_below="@id/num7" />
 
     <Button
         android:id="@+id/num5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="5"
+        android:text="@string/num5"
         android:layout_below="@id/num8"
-        android:layout_toRightOf="@id/num4"/>
+        android:layout_toEndOf="@id/num4"/>
 
     <Button
         android:id="@+id/num6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="6"
+        android:text="@string/num6"
         android:layout_below="@id/num9"
-        android:layout_toRightOf="@id/num5" />
+        android:layout_toEndOf="@id/num5" />
     <Button
         android:id="@+id/num7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="7"
+        android:text="@string/num7"
         android:layout_below="@id/output"/>
 
     <Button
         android:id="@+id/num8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="8"
+        android:text="@string/num8"
         android:layout_below="@id/output"
-        android:layout_toRightOf="@id/num7"/>
+        android:layout_toEndOf="@id/num7"/>
 
     <Button
         android:id="@+id/num9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="9"
+        android:text="@string/num9"
         android:layout_below="@id/output"
-        android:layout_toRightOf="@id/num8"/>
+        android:layout_toEndOf="@id/num8"/>
 
     <Button
         android:id="@+id/add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="+"
+        android:text="@string/add"
         android:layout_below="@id/output"
-        android:layout_toRightOf="@id/num9" />
+        android:layout_toEndOf="@id/num9" />
 
     <Button
         android:id="@+id/subtract"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="_"
+        android:text="@string/subtract"
         android:layout_below="@id/add"
-        android:layout_toRightOf="@id/num6"/>
+        android:layout_toEndOf="@id/num6"/>
 
     <Button
         android:id="@+id/multiply"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="*"
+        android:text="@string/multiply"
         android:layout_below="@id/subtract"
-        android:layout_toRightOf="@id/num6" />
+        android:layout_toEndOf="@id/num6" />
 
     <Button
         android:id="@+id/divide"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="/"
+        android:text="@string/divide"
         android:layout_below="@id/multiply"
-        android:layout_toRightOf="@id/clear" />
+        android:layout_toEndOf="@id/clear" />
 
     <Button
         android:id="@+id/delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Del"
+        android:text="@string/delete"
         android:layout_below="@id/clear"
-        android:layout_toRightOf="@id/rightParantheses"/>
+        android:layout_toEndOf="@id/rightParantheses"/>
 
     <Button
         android:id="@+id/equal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="="
+        android:text="@string/equal"
         android:layout_below="@id/divide"
-        android:layout_toRightOf="@id/delete" />
+        android:layout_toEndOf="@id/delete" />
 
     <Button
         android:id="@+id/decimal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="."
+        android:text="@string/decimal"
         android:layout_below="@id/num1"/>
 
     <Button
         android:id="@+id/leftParantheses"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="("
+        android:text="@string/leftParentheses"
         android:layout_below="@id/decimal" />
 
     <Button
         android:id="@+id/rightParantheses"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=")"
+        android:text="@string/rightParentheses"
         android:layout_below="@id/num0"
-        android:layout_toRightOf="@id/leftParantheses" />
+        android:layout_toEndOf="@id/leftParantheses" />
 
     <Button
         android:id="@+id/clear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Clr"
+        android:text="@string/clear"
         android:layout_below="@id/num3"
-        android:layout_toRightOf="@id/num0" />
+        android:layout_toEndOf="@id/num0" />
+
+    <Button
+        android:id="@+id/factorial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/factorial"
+        android:layout_below="@id/leftParantheses" />
+
+    <Button
+        android:id="@+id/exponent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/power"
+        android:layout_below="@id/leftParantheses"
+        android:layout_toEndOf="@id/factorial" />
 
 </RelativeLayout>

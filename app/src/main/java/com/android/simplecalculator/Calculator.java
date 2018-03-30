@@ -60,6 +60,9 @@ public class Calculator {
             case "*":
                 result = Integer.parseInt(op2) * Integer.parseInt(op1);
                 break;
+            case "^":
+                result = (long) Math.pow(Integer.parseInt(op2), Integer.parseInt(op1));     // operand order matters
+                break;
             default:
                 result = 0;
                 break;
