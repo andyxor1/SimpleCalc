@@ -17,11 +17,11 @@ import java.util.Stack;
  */
 public class MainActivity extends AppCompatActivity{
 
-    private static String operators = "=()+-*/^!";
+
     private Stack<String> numStack = new Stack<>(); // input and numbers
-    private Stack<String> opStack = new Stack<>(); // postfix and operators
-    private Hashtable<String, Integer> orderOfOps =  new Hashtable<>();
+    private Stack<String> opStack = new Stack<>(); // postfix and operator
     private static final String TAG = MainActivity.class.getSimpleName();
+    final Calculator calc = new Calculator();
     private long result;
 
 
@@ -36,6 +36,9 @@ public class MainActivity extends AppCompatActivity{
         final Button multiply = findViewById(R.id.multiply);
         final Button divide = findViewById(R.id.divide);
         final Button equal = findViewById(R.id.equal);
+        final Button leftParan = findViewById(R.id.leftParantheses);
+        final  Button rightParan = findViewById(R.id.rightParantheses);
+
         final Button num0 = findViewById(R.id.num0);
         final Button num1 = findViewById(R.id.num1);
         final Button num2 = findViewById(R.id.num2);
@@ -46,14 +49,12 @@ public class MainActivity extends AppCompatActivity{
         final Button num7 = findViewById(R.id.num7);
         final Button num8 = findViewById(R.id.num8);
         final Button num9 = findViewById(R.id.num9);
+        final Button del = findViewById(R.id.delete);
+        final Button clr = findViewById(R.id.clear);
 
-        // PEMDAS
-        orderOfOps.put("+", 1);
-        orderOfOps.put("-", 1);
-        orderOfOps.put("*", 2);
-        orderOfOps.put("/", 2);
-        orderOfOps.put("^", 3);
-        orderOfOps.put("!", 3);
+
+
+
 
         // Basic Operations
         add.setOnClickListener(new View.OnClickListener() {
@@ -86,9 +87,21 @@ public class MainActivity extends AppCompatActivity{
                 Log.d(TAG, "equal() on infix : " + userInput.getText().toString());
                 toPostFix(userInput.getText().toString());    // change infix expression to postfix
                 Log.d(TAG, "postfix in numStack, ready to evaluate");
-                result = evaluate();     // evaluate all of stack
+                result = calc.evaluate(numStack, opStack);     // evaluate all of stack
                 userInput.setText(String.format(Locale.US, "%d",    result));
                 Log.d(TAG, "result = " + result);
+            }
+        });
+        leftParan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userInput.setText(append(userInput.getText().toString(), "("));
+            }
+        });
+        rightParan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userInput.setText(append(userInput.getText().toString(), ")"));
             }
         });
 
@@ -154,92 +167,26 @@ public class MainActivity extends AppCompatActivity{
                 userInput.setText(append(userInput.getText().toString(),"9"));
             }
         });
-
-    }
-
-    /*
-     * Description: Check if e is an operator :    =()+-x/^!
-     * Return: True if e is operator, otherwise False
-     */
-    public boolean isOperator(String e) {
-        return operators.contains(e);
-    }
-
-    /*
-     * Description: Evaluate a post-fix expression stored in numStack
-     * Return: computed value
-     */
-    public long evaluate() {
-        String operator;
-        String operand1, operand2;
-        long result;
-        // reverse numStack onto opStack
-        while (!numStack.isEmpty())
-            opStack.push(numStack.pop());
-
-        while (!opStack.isEmpty()) {
-
-            if (!isOperator(opStack.peek())) { // push numbers to numStack
-                numStack.push(opStack.pop());
-
-            } else {   // top element is an operand
-                operator = opStack.pop();
-                operand1 = numStack.pop();
-
-                // Unary Operator
-                if (operator.equals("!")) {
-                    // factorial
-                    numStack.push(Long.toString(Long.parseLong(operand1)));
-
-                    // Binary Operator
-                } else {
-                    operand2 = numStack.pop();
-                    numStack.push(Long.toString(binaryOP(operator, operand1, operand2)));
+        del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String curr = userInput.getText().toString();
+                if( curr.length() > 0) {
+                    int end = ( curr.charAt(curr.length() - 1) == ' ' ) ?
+                            curr.length() - 2 : curr.length() - 1;
+                    userInput.setText(curr.substring(0, end));
                 }
             }
-        }
+        });
+        clr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userInput.setText("");
+            }
+        });
 
-        result = Long.parseLong(numStack.peek());
-        return result;
     }
 
-
-    /*
-     * Description: Compute result given a binary operator and its operands
-     * Return: Computed value
-     */
-    public long binaryOP( String operator, String op1, String op2) {
-        long result;
-
-        switch (operator) {
-            case "+":
-                result = Integer.parseInt(op2) + Integer.parseInt(op1);
-                break;
-            case "-":
-                result = Integer.parseInt(op2) - Integer.parseInt(op1);     // operand order matters
-                break;
-            case "/":
-                result = Integer.parseInt(op2) / Integer.parseInt(op1);     // operand order matters
-                break;
-            case "*":
-                result = Integer.parseInt(op2) * Integer.parseInt(op1);
-                break;
-            default:
-                result = 0;
-                break;
-        }
-        return result;
-    }
-
-    /*
-     * Description: Compute factorial on input n
-     * Return: Computed Value
-     */
-    public long factorial( int n ) {
-        if( n == 1)
-            return 1;
-        return n * factorial(n-1);
-    }
 
     /*
      * Description: Appends String c to current user input
@@ -266,12 +213,12 @@ public class MainActivity extends AppCompatActivity{
                 while (!opStack.peek().equals("(") )
                     numStack.push(opStack.pop());
 
-            } else if( isOperator(input) ) {
+            } else if( calc.isOperator(input) ) {
                 // remove any  precedence operators on opstack
        //         Log.d(TAG, "input = " + input);
 //                Log.d(TAG, "top of op stack is " + opStack.peek());
                 while (!opStack.isEmpty() &&
-                        (orderOfOps.get(input) < orderOfOps.get(opStack.peek()))  ) {
+                        (calc.getOrderOfOps().get(input) < calc.getOrderOfOps().get(opStack.peek()))  ) {
                     numStack.push(opStack.pop());
                 }
                 opStack.push(input);
